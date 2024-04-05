@@ -4,5 +4,6 @@ Run ServiceApplication.
 Open localhost:8090.
 Add some new posts for testing.
 Check by show all posts.
+Swagger link http://localhost:8090/swagger-ui/index.html.
 
 
