@@ -1,18 +1,19 @@
 package com.peli.service;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Customer {
     @Id
+    @Column (name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    @Column (name = "user_id")
     private Integer userId;
+    @Column (name = "title")
     private String title;
+    @Column (name = "body")
     private String body;
 
     public Integer getId() {

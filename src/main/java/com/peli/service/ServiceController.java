@@ -13,7 +13,7 @@ public class ServiceController extends CustomerServiceClient {
     }
 
     @PostMapping("/add")
-    public String addCustomer(@RequestParam Integer userId, @RequestParam String title, @RequestParam String body) {
+    public String addCustomer(Integer userId, String title, String body) {
         Customer customer = new Customer();
         customer.setUserId(userId);
         customer.setTitle(title);
@@ -32,45 +32,40 @@ public class ServiceController extends CustomerServiceClient {
         return customerRepository.findAll();
     }
 
-    @GetMapping("/find")
-    public Optional<Customer> findCustomerById(@RequestParam("id") Integer id) {
+    @GetMapping("/find/{id}")
+    public Optional<Customer> findCustomerById(Integer id) {
         Optional<Customer> customer = customerRepository.findById(id);
         if (customer.isPresent()) {
             return customer;
         } else if (existsCustomerById(id)) {
             Customer existingCustomer = getCustomerById(id);
-            existingCustomer.setUserId(existingCustomer.getUserId());
-            existingCustomer.setTitle(existingCustomer.getTitle());
-            existingCustomer.setBody(existingCustomer.getBody());
+            updateCustomer(existingCustomer, id, existingCustomer.getUserId(),
+                    existingCustomer.getTitle(), existingCustomer.getBody());
             customerRepository.save(existingCustomer);
             return Optional.of(existingCustomer);
         }
         throw new RuntimeException("Customer not found");
     }
 
-    @PostMapping("/update")
-    public Optional<Customer> updateCustomer(@RequestParam("id") Integer id, @RequestParam String title,
-                                             @RequestParam String body) {
+    @PutMapping("/update/{id}")
+    public Optional<Customer> updateCustomer(Integer id, Integer userId, String title, String body) {
         Optional<Customer> customer = customerRepository.findById(id);
         if (customer.isPresent()) {
             Customer newCustomer = new Customer();
-            newCustomer.setId(id);
-            newCustomer.setTitle(title);
-            newCustomer.setBody(body);
+            updateCustomer(newCustomer, id, userId, title, body);
             customerRepository.save(newCustomer);
             return Optional.of(newCustomer);
         } else if (existsCustomerById(id)) {
             Customer existingCustomer = getCustomerById(id);
-            existingCustomer.setTitle(title);
-            existingCustomer.setBody(body);
+            updateCustomer(existingCustomer, id, userId, title, body);
             customerRepository.save(existingCustomer);
             return Optional.of(existingCustomer);
         }
         throw new RuntimeException("Customer not found");
     }
 
-    @PostMapping("/delete")
-    public String deleteCustomer(@RequestParam("id") Integer id) {
+    @DeleteMapping("/delete/{id}")
+    public String deleteCustomer(Integer id) {
         customerRepository.deleteById(id);
         return "Customer deleted";
     }

@@ -52,4 +52,12 @@ public class CustomerServiceClient {
         List<Customer> list = Arrays.asList(customersId);
         return list.stream().map(Customer::getId).collect(Collectors.toList());
     }
+
+    public void updateCustomer(Customer customer, Integer id, Integer userId,
+                               String title, String body) {
+        customer.setId(id);
+        customer.setUserId(userId);
+        customer.setTitle(title);
+        customer.setBody(body);
+    }
 }
